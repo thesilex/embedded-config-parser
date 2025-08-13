@@ -1,0 +1,14 @@
+# Embedded Peripheral Configuration Parser
+# Python 3.8+ required
+
+# Core dependencies
+pyyaml>=6.0.1
+jsonschema>=4.17.0
+
+# CLI and UI
+click>=8.1.0
+rich>=13.7.0
+colorama>=0.4.6
+
+# Data processing
+dataclasses-json>=0.6.0

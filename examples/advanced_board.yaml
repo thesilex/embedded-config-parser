@@ -1,0 +1,133 @@
+# Advanced STM32F4 Configuration Example
+board:
+  name: "Custom STM32F4 Board"
+  mcu: "STM32F407VGT6"
+  clock_frequency: 168000000
+  voltage: 3.3
+  description: "Advanced development board with multiple peripherals"
+
+gpio:
+  - pin: "PD12"
+    direction: "output"
+    pull: "none"
+    speed: "high"
+    initial_state: "low"
+    description: "Status LED Green"
+    
+  - pin: "PD13"
+    direction: "output"
+    pull: "none"
+    speed: "high"
+    initial_state: "low"
+    description: "Status LED Orange"
+    
+  - pin: "PD14"
+    direction: "output"
+    pull: "none"
+    speed: "high"
+    initial_state: "low"
+    description: "Status LED Red"
+    
+  - pin: "PA0"
+    direction: "input"
+    pull: "down"
+    speed: "low"
+    description: "User Button 1"
+    
+  - pin: "PA1"
+    direction: "input"
+    pull: "up"
+    speed: "low"
+    description: "User Button 2"
+
+uart:
+  uart1:
+    enabled: true
+    baudrate: 115200
+    data_bits: 8
+    stop_bits: 1
+    parity: "none"
+    flow_control: "none"
+    tx_pin: "PA9"
+    rx_pin: "PA10"
+    description: "Debug Console"
+    
+  uart2:
+    enabled: true
+    baudrate: 9600
+    data_bits: 8
+    stop_bits: 1
+    parity: "none"
+    flow_control: "rts-cts"
+    tx_pin: "PA2"
+    rx_pin: "PA3"
+    description: "GPS Module"
+
+i2c:
+  i2c1:
+    enabled: true
+    speed: 100000
+    scl_pin: "PB6"
+    sda_pin: "PB7"
+    pull_up: true
+    description: "Low Speed Sensor Bus"
+    devices:
+      - name: "temp_sensor"
+        address: 0x48
+        device_type: "LM75"
+        description: "Temperature Sensor"
+        
+      - name: "humidity_sensor"
+        address: 0x40
+        device_type: "SHT30"
+        description: "Humidity Sensor"
+        
+      - name: "rtc"
+        address: 0x68
+        device_type: "DS3231"
+        description: "Real Time Clock"
+    
+  i2c2:
+    enabled: true
+    speed: 400000
+    scl_pin: "PB10"
+    sda_pin: "PB11"
+    pull_up: true
+    description: "High Speed Sensor Bus"
+    devices:
+      - name: "accelerometer"
+        address: 0x1D
+        device_type: "MMA8451Q"
+        description: "3-Axis Accelerometer"
+
+spi:
+  spi1:
+    enabled: true
+    mode: 0
+    speed: 10000000  # 10 MHz
+    data_bits: 8
+    bit_order: "msb"
+    sck_pin: "PA5"
+    miso_pin: "PA6"
+    mosi_pin: "PA7"
+    cs_pins: ["PA4", "PB0"]
+    description: "High Speed SPI Bus"
+
+timers:
+  timer1:
+    enabled: true
+    prescaler: 168
+    period: 1000
+    mode: "periodic"
+    auto_reload: true
+    description: "1ms System Timer"
+    
+  timer2:
+    enabled: true
+    prescaler: 84
+    period: 20000
+    mode: "pwm"
+    channel: 1
+    duty_cycle: 75
+    output_pin: "PA8"
+    description: "Servo Control PWM"

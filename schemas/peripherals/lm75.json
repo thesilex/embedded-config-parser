@@ -1,0 +1,83 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "LM75 Temperature Sensor Schema",
+  "description": "JSON Schema for LM75 temperature sensor configuration validation",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Device identifier name"
+    },
+    "address": {
+      "type": "integer",
+      "minimum": 72,
+      "maximum": 79,
+      "description": "LM75 I2C address range: 0x48-0x4F (72-79 decimal)"
+    },
+    "type": {
+      "type": "string",
+      "enum": ["lm75", "LM75"],
+      "description": "Device type identifier"
+    },
+    "description": {
+      "type": "string",
+      "description": "Optional device description"
+    },
+    "config": {
+      "type": "object",
+      "properties": {
+        "resolution": {
+          "type": "string",
+          "enum": ["9-bit", "10-bit", "11-bit", "12-bit"],
+          "default": "9-bit",
+          "description": "Temperature resolution"
+        },
+        "sample_rate": {
+          "type": "string",
+          "enum": ["100ms", "200ms", "400ms", "800ms"],
+          "default": "100ms",
+          "description": "Temperature sampling rate"
+        },
+        "shutdown_mode": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable shutdown mode for power saving"
+        },
+        "thermostat_mode": {
+          "type": "string",
+          "enum": ["comparator", "interrupt"],
+          "default": "comparator",
+          "description": "Thermostat operating mode"
+        },
+        "polarity": {
+          "type": "string",
+          "enum": ["active-low", "active-high"],
+          "default": "active-low",
+          "description": "OS output polarity"
+        },
+        "fault_queue": {
+          "type": "integer",
+          "enum": [1, 2, 4, 6],
+          "default": 1,
+          "description": "Number of fault conditions required to trigger OS"
+        },
+        "os_temperature": {
+          "type": "number",
+          "minimum": -55,
+          "maximum": 125,
+          "default": 80,
+          "description": "OS trigger temperature in Celsius"
+        },
+        "hysteresis_temperature": {
+          "type": "number",
+          "minimum": -55,
+          "maximum": 125,
+          "default": 75,
+          "description": "Hysteresis temperature in Celsius"
+        }
+      }
+    }
+  },
+  "required": ["name", "address", "type"],
+  "additionalProperties": false
+}

@@ -1,0 +1,15 @@
+# Invalid YAML Example 
+board:
+  name: "STM32F4-Discovery"
+  mcu: "STM32F407VGT6"
+  clock_frequency  168000000  # Missing colon character
+  voltage: 3.3
+  description: "STM32F4 Discovery Board"
+
+gpio:
+  - pin: "PD12"
+    direction: "output"
+    pull: "none"
+    speed: "medium"
+    initial_state: "low"
+    description: "Green LED"

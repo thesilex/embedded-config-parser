@@ -1,0 +1,134 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "MMA8451Q Accelerometer Schema",
+  "description": "JSON Schema for MMA8451Q 3-axis accelerometer configuration validation",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Device identifier name"
+    },
+    "address": {
+      "type": "integer",
+      "enum": [28, 29],
+      "description": "MMA8451Q I2C address: 0x1C (28) or 0x1D (29) depending on SA0 pin"
+    },
+    "type": {
+      "type": "string",
+      "enum": ["mma8451q", "MMA8451Q"],
+      "description": "Device type identifier"
+    },
+    "description": {
+      "type": "string",
+      "description": "Optional device description"
+    },
+    "config": {
+      "type": "object",
+      "properties": {
+        "range": {
+          "type": "string",
+          "enum": ["±2g", "±4g", "±8g"],
+          "default": "±2g",
+          "description": "Accelerometer measurement range"
+        },
+        "data_rate": {
+          "type": "string",
+          "enum": ["800Hz", "400Hz", "200Hz", "100Hz", "50Hz", "12.5Hz", "6.25Hz", "1.56Hz"],
+          "default": "800Hz",
+          "description": "Output data rate"
+        },
+        "resolution": {
+          "type": "string",
+          "enum": ["14-bit", "8-bit"],
+          "default": "14-bit",
+          "description": "Data resolution"
+        },
+        "noise_mode": {
+          "type": "string",
+          "enum": ["normal", "low-noise", "high-resolution", "low-power"],
+          "default": "normal",
+          "description": "Noise reduction mode"
+        },
+        "auto_sleep": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable automatic sleep mode"
+        },
+        "fifo_mode": {
+          "type": "string",
+          "enum": ["disabled", "circular", "fill", "trigger"],
+          "default": "disabled",
+          "description": "FIFO buffer mode"
+        },
+        "high_pass_filter": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable high-pass filter"
+        },
+        "interrupts": {
+          "type": "object",
+          "properties": {
+            "data_ready": {
+              "type": "boolean",
+              "default": false,
+              "description": "Enable data ready interrupt"
+            },
+            "motion_detection": {
+              "type": "boolean",
+              "default": false,
+              "description": "Enable motion detection interrupt"
+            },
+            "freefall_detection": {
+              "type": "boolean",
+              "default": false,
+              "description": "Enable freefall detection interrupt"
+            },
+            "tap_detection": {
+              "type": "boolean",
+              "default": false,
+              "description": "Enable tap/pulse detection interrupt"
+            },
+            "orientation": {
+              "type": "boolean",
+              "default": false,
+              "description": "Enable orientation detection interrupt"
+            },
+            "fifo": {
+              "type": "boolean",
+              "default": false,
+              "description": "Enable FIFO interrupt"
+            }
+          }
+        },
+        "calibration": {
+          "type": "object",
+          "properties": {
+            "x_offset": {
+              "type": "number",
+              "minimum": -2048,
+              "maximum": 2047,
+              "default": 0,
+              "description": "X-axis offset calibration value"
+            },
+            "y_offset": {
+              "type": "number",
+              "minimum": -2048,
+              "maximum": 2047,
+              "default": 0,
+              "description": "Y-axis offset calibration value"
+            },
+            "z_offset": {
+              "type": "number",
+              "minimum": -2048,
+              "maximum": 2047,
+              "default": 0,
+              "description": "Z-axis offset calibration value"
+            }
+          }
+        }
+      }
+    }
+  },
+  "required": ["name", "address", "type"],
+  "additionalProperties": false
+}

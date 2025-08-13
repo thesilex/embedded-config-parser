@@ -1,0 +1,63 @@
+# Simple STM32F4 Configuration Example
+board:
+  name: "STM32F4-Discovery"
+  mcu: "STM32F407VGT6"
+  clock_frequency: 168000000  # 168 MHz
+  voltage: 3.3
+  description: "STM32F4 Discovery Board"
+
+gpio:
+  - pin: "PD12"
+    direction: "output"
+    pull: "none"
+    speed: "medium"
+    initial_state: "low"
+    description: "Green LED"
+    
+  - pin: "PD13"
+    direction: "output"
+    pull: "none"
+    speed: "medium"
+    initial_state: "low"
+    description: "Orange LED"
+    
+  - pin: "PA0"
+    direction: "input"
+    pull: "down"
+    speed: "low"
+    description: "User Button"
+
+uart:
+  uart1:
+    enabled: true
+    baudrate: 115200
+    data_bits: 8
+    stop_bits: 1
+    parity: "none"
+    flow_control: "none"
+    tx_pin: "PA9"
+    rx_pin: "PA10"
+    description: "Debug Console"
+
+i2c:
+  i2c1:
+    enabled: true
+    speed: 100000  # 100 kHz
+    scl_pin: "PB6"
+    sda_pin: "PB7"
+    pull_up: true
+    description: "Sensor Bus"
+    devices:
+      - name: "temp_sensor"
+        address: 0x48
+        device_type: "LM75"
+        description: "Temperature Sensor"
+
+timers:
+  timer2:
+    enabled: true
+    prescaler: 1680  # For 1ms tick at 168MHz
+    period: 1000     # 1 second
+    mode: "periodic"
+    auto_reload: true
+    description: "System Tick Timer"

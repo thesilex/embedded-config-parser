@@ -1,0 +1,297 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "STM32F407V Series - 100-pin LQFP Package Schema",
+  "description": "JSON Schema for STM32F407V variants (VGT6, VET6, VCT6) - 100-pin LQFP package",
+  "type": "object",
+  
+  "mcu_patterns": [
+    "STM32F407V.*",
+    "stm32f407v.*"
+  ],
+  
+  "package_info": {
+    "series": "STM32F407V",
+    "package_type": "LQFP100",
+    "pin_count": 100,
+    "gpio_count": 82,
+    "variants": ["VGT6", "VET6", "VCT6"],
+    "description": "100-pin LQFP package variants of STM32F407"
+  },
+  
+  "package_constraints": {
+    "gpio_ports": {
+      "A": {"min": 0, "max": 15, "available_pins": 16},
+      "B": {"min": 0, "max": 15, "available_pins": 16},
+      "C": {"min": 0, "max": 15, "available_pins": 16},
+      "D": {"min": 0, "max": 15, "available_pins": 16},
+      "E": {"min": 0, "max": 15, "available_pins": 16}
+    },
+    "unavailable_ports": ["F", "G", "H", "I"],
+    "total_gpio_count": 82,
+    "peripheral_limits": {
+      "uart_count": 6,
+      "i2c_count": 3,
+      "spi_count": 3,
+      "timer_count": 14
+    }
+  },
+  
+  "properties": {
+    "board": {
+      "type": "object",
+      "properties": {
+        "name": {"type": "string"},
+        "mcu": {
+          "type": "string",
+          "pattern": "^STM32F407V[GEC][TH][67]$",
+          "description": "STM32F407V variants: VGT6, VET6, VCT6, VGH6, VEH6, VCH6, VGT7, VET7, VCT7"
+        },
+        "clock_frequency": {
+          "type": "integer",
+          "minimum": 1000000,
+          "maximum": 168000000,
+          "description": "STM32F407 supports up to 168MHz (not 180MHz like F429)"
+        },
+        "voltage": {
+          "type": "number",
+          "minimum": 1.8,
+          "maximum": 3.6,
+          "description": "STM32F407 operating voltage range"
+        },
+        "description": {"type": "string"}
+      },
+      "required": ["name", "mcu", "clock_frequency"]
+    },
+    
+    "gpio": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "pin": {
+            "type": "string",
+            "pattern": "^P[A-E](1[0-5]|[0-9])$",
+            "description": "100-pin package: Only ports A,B,C,D,E available (pins 0-15 each)"
+          },
+          "direction": {
+            "type": "string",
+            "enum": ["input", "output"]
+          },
+          "pull": {
+            "type": "string",
+            "enum": ["none", "up", "down"]
+          },
+          "speed": {
+            "type": "string",
+            "enum": ["low", "medium", "high", "very-high"]
+          },
+          "initial_state": {
+            "type": "string",
+            "enum": ["low", "high"]
+          },
+          "description": {"type": "string"}
+        },
+        "required": ["pin", "direction"]
+      }
+    },
+    
+    "uart": {
+      "type": "object",
+      "patternProperties": {
+        "^uart[1-6]$": {
+          "type": "object",
+          "properties": {
+            "enabled": {"type": "boolean"},
+            "baudrate": {
+              "type": "integer",
+              "enum": [9600, 19200, 38400, 57600, 115200, 230400, 460800, 921600, 1843200]
+            },
+            "data_bits": {
+              "type": "integer",
+              "enum": [7, 8, 9]
+            },
+            "stop_bits": {
+              "type": "integer",
+              "enum": [1, 2]
+            },
+            "parity": {
+              "type": "string",
+              "enum": ["none", "even", "odd"]
+            },
+            "flow_control": {
+              "type": "string",
+              "enum": ["none", "rts-cts", "xon-xoff"]
+            },
+            "tx_pin": {
+              "type": "string",
+              "pattern": "^P[A-E](1[0-5]|[0-9])$",
+              "description": "TX pin must be from available ports A-E"
+            },
+            "rx_pin": {
+              "type": "string",
+              "pattern": "^P[A-E](1[0-5]|[0-9])$",
+              "description": "RX pin must be from available ports A-E"
+            },
+            "description": {"type": "string"}
+          },
+          "required": ["enabled"]
+        }
+      },
+      "maxProperties": 6,
+      "description": "Maximum 6 UART interfaces for STM32F407"
+    },
+    
+    "i2c": {
+      "type": "object",
+      "patternProperties": {
+        "^i2c[1-3]$": {
+          "type": "object",
+          "properties": {
+            "enabled": {"type": "boolean"},
+            "speed": {
+              "type": "integer",
+              "enum": [100000, 400000, 1000000]
+            },
+            "scl_pin": {
+              "type": "string",
+              "pattern": "^P[A-E](1[0-5]|[0-9])$",
+              "description": "SCL pin must be from available ports A-E"
+            },
+            "sda_pin": {
+              "type": "string",
+              "pattern": "^P[A-E](1[0-5]|[0-9])$",
+              "description": "SDA pin must be from available ports A-E"
+            },
+            "pull_up": {"type": "boolean"},
+            "description": {"type": "string"},
+            "devices": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {"type": "string"},
+                  "address": {
+                    "type": "integer",
+                    "minimum": 8,
+                    "maximum": 119
+                  },
+                  "type": {"type": "string"},
+                  "description": {"type": "string"}
+                },
+                "required": ["name", "address", "type"]
+              }
+            }
+          },
+          "required": ["enabled"]
+        }
+      },
+      "maxProperties": 3,
+      "description": "Maximum 3 I2C interfaces for STM32F407"
+    },
+    
+    "timers": {
+      "type": "object",
+      "patternProperties": {
+        "^tim(1[0-4]|[1-9])$": {
+          "type": "object",
+          "properties": {
+            "enabled": {"type": "boolean"},
+            "prescaler": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 65536
+            },
+            "period": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 65536
+            },
+            "mode": {
+              "type": "string",
+              "enum": ["periodic", "pwm", "input-capture"]
+            },
+            "auto_reload": {"type": "boolean"},
+            "channel": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 4
+            },
+            "duty_cycle": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "output_pin": {
+              "type": "string",
+              "pattern": "^P[A-E](1[0-5]|[0-9])$",
+              "description": "PWM output pin must be from available ports A-E"
+            },
+            "description": {"type": "string"}
+          },
+          "required": ["enabled"]
+        }
+      },
+      "maxProperties": 14,
+      "description": "STM32F407 has TIM1-TIM14 (14 timers total)"
+    },
+    
+    "spi": {
+      "type": "object",
+      "patternProperties": {
+        "^spi[1-3]$": {
+          "type": "object",
+          "properties": {
+            "enabled": {"type": "boolean"},
+            "mode": {
+              "type": "integer",
+              "enum": [0, 1, 2, 3]
+            },
+            "speed": {
+              "type": "integer",
+              "minimum": 100000,
+              "maximum": 42000000,
+              "description": "STM32F407 SPI max speed is 42MHz"
+            },
+            "data_bits": {
+              "type": "integer",
+              "enum": [8, 16]
+            },
+            "bit_order": {
+              "type": "string",
+              "enum": ["msb", "lsb"]
+            },
+            "sck_pin": {
+              "type": "string",
+              "pattern": "^P[A-E](1[0-5]|[0-9])$",
+              "description": "SCK pin must be from available ports A-E"
+            },
+            "miso_pin": {
+              "type": "string",
+              "pattern": "^P[A-E](1[0-5]|[0-9])$",
+              "description": "MISO pin must be from available ports A-E"
+            },
+            "mosi_pin": {
+              "type": "string",
+              "pattern": "^P[A-E](1[0-5]|[0-9])$",
+              "description": "MOSI pin must be from available ports A-E"
+            },
+            "cs_pins": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^P[A-E](1[0-5]|[0-9])$",
+                "description": "CS pins must be from available ports A-E"
+              }
+            },
+            "description": {"type": "string"}
+          },
+          "required": ["enabled"]
+        }
+      },
+      "maxProperties": 3,
+      "description": "100-pin package has only SPI1, SPI2, SPI3 available"
+    }
+  },
+  
+  "required": ["board"]
+}

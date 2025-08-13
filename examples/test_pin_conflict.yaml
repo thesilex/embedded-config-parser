@@ -1,0 +1,27 @@
+# Test PIN CONFLICT Detection
+board:
+  name: "Pin Conflict Test"
+  mcu: "STM32F407VGT6"
+  clock_frequency: 168000000
+
+# INTENTIONAL PIN CONFLICTS FOR TESTING
+gpio:
+  - pin: "PA0"
+    direction: "output"
+    description: "GPIO on PA0"
+
+uart:
+  uart1:
+    enabled: true
+    baudrate: 115200
+    tx_pin: "PA0"  # CONFLICT! PA0 already used by GPIO
+    rx_pin: "PA1"
+    description: "UART also using PA0"
+
+i2c:
+  i2c1:
+    enabled: true
+    speed: 100000
+    scl_pin: "PA1"  # CONFLICT! PA1 already used by UART RX
+    sda_pin: "PA2"
+    description: "I2C also using PA1"
